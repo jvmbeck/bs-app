@@ -35,3 +35,4 @@ export const helloWorld = onRequest((request, response) => {
 });
 
 export { logActivity } from './activities/logActivity';
+export { createUser } from './auth/createUser';

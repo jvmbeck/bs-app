@@ -1,43 +1,18 @@
-import { auth, db } from 'src/key/configKey';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth, functions } from 'src/key/configKey';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { httpsCallable } from 'firebase/functions';
 
-export interface AppUser {
-  uid: string;
-  name: string;
+// Data the frontend is allowed to send to the backend
+export interface CreateUserPayload {
   email: string;
-  role: 'client' | 'admin';
+  name: string;
+  role: 'Vendas' | 'Supervisor';
 }
 
-/**
- * Register user in Firebase Auth
- * and create user profile in Firestore
- */
-export async function registerUser(
-  email: string,
-  password: string,
-  name: string,
-  role: AppUser['role'],
-): Promise<AppUser> {
-  const credential = await createUserWithEmailAndPassword(auth, email, password);
-
-  const user: AppUser = {
-    uid: credential.user.uid,
-    name,
-    email,
-    role,
-  };
-
-  console.log('User created:', user);
-  try {
-    await setDoc(doc(db, 'users', user.uid), user);
-  } catch (error) {
-    console.error('Failed to create user document:', error);
-    throw error;
-  }
-
-  return user;
-}
+export const registerUser = async (payload: CreateUserPayload) => {
+  const fn = httpsCallable(functions, 'createUser');
+  return fn(payload);
+};
 
 /**
  * Login user with email and password

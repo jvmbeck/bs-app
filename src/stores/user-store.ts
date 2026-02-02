@@ -1,18 +1,21 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { loginUser, registerUser, logoutUser, type AppUser } from 'src/services/auth/index';
+import { loginUser, createUser, logoutUser } from 'src/services/auth/index';
+import type { UserModel } from 'src/models/FirestoreModels';
+import type { CreateUserPayload, CreateUserResponse } from 'src/models/Payloads';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { getUserById } from 'src/services/users/index';
 
 export const useUserStore = defineStore('user', () => {
   const authUser = ref<FirebaseUser | null>(null);
-  const user = ref<AppUser | null>(null);
+  const user = ref<UserModel | null>(null);
   const loading = ref(false);
   const authReady = ref(false);
   const error = ref<string | null>(null);
+  const createdUser = ref<CreateUserResponse | null>(null);
 
   const isAuthenticated = computed(() => !!user.value);
-  const isAdmin = computed(() => user.value?.role === 'admin');
+  const isAdmin = computed(() => user.value?.role === 'Administrador');
 
   async function login(email: string, password: string) {
     loading.value = true;
@@ -37,14 +40,27 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  async function register(email: string, password: string, name: string, role: AppUser['role']) {
+  async function register(
+    email: string,
+    name: string,
+    role: CreateUserPayload['role'],
+  ): Promise<CreateUserResponse> {
     loading.value = true;
     error.value = null;
 
     try {
-      user.value = await registerUser(email, password, name, role);
+      const created = await createUser({
+        email,
+        name,
+        role,
+      });
+      console.log('STORE CREATED USER: ', created);
+
+      createdUser.value = created;
+      return created;
     } finally {
       loading.value = false;
+      console.log('USER-STORE: \n\ncreatedUser.value is: ', createdUser.value);
     }
   }
 
@@ -90,6 +106,7 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     user,
+    createdUser,
     loading,
     authReady,
     error,

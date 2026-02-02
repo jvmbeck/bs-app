@@ -1,4 +1,4 @@
-import type { Timestamp } from 'firebase/firestore';
+import type { FieldValue, Timestamp } from 'firebase/firestore';
 
 export type OpportunityStage =
   | 'Lead Novo'
@@ -13,11 +13,12 @@ export type ActivityType = 'Ligação' | 'Reunião' | 'E-mail' | 'Visita';
 export type UserRole = 'Vendas' | 'Supervisor' | 'Administrador';
 
 export interface UserModel {
+  id: string;
   name: string;
   email: string;
   role: UserRole;
   active: boolean;
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
 }
 
 export interface CompanyModel {

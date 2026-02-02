@@ -1,42 +1,21 @@
-import { auth, db } from 'src/key/configKey';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { auth, functions } from 'src/key/configKey';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { httpsCallable } from 'firebase/functions';
+import type { CreateUserPayload, CreateUserResponse } from 'src/models/Payloads';
 
-export interface AppUser {
-  uid: string;
-  name: string;
-  email: string;
-  role: 'client' | 'admin';
-}
+const createUserCallable = httpsCallable<CreateUserPayload, CreateUserResponse>(
+  functions,
+  'createUser',
+);
 
-/**
- * Register user in Firebase Auth
- * and create user profile in Firestore
- */
-export async function registerUser(
-  email: string,
-  password: string,
-  name: string,
-  role: AppUser['role'],
-): Promise<AppUser> {
-  const credential = await createUserWithEmailAndPassword(auth, email, password);
+export async function createUser(payload: CreateUserPayload): Promise<CreateUserResponse> {
+  const result = await createUserCallable(payload);
+  console.log(
+    'AUTH.SERVICES: \n\nThis is result.data returned to the store when registering a new user: ',
+    result.data,
+  );
 
-  const user: AppUser = {
-    uid: credential.user.uid,
-    name,
-    email,
-    role,
-  };
-
-  console.log('User created:', user);
-  try {
-    await setDoc(doc(db, 'users', user.uid), user);
-  } catch (error) {
-    console.error('Failed to create user document:', error);
-    throw error;
-  }
-
-  return user;
+  return result.data;
 }
 
 /**

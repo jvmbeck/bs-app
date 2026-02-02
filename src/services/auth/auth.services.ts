@@ -1,18 +1,22 @@
 import { auth, functions } from 'src/key/configKey';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { httpsCallable } from 'firebase/functions';
+import type { CreateUserPayload, CreateUserResponse } from 'src/models/Payloads';
 
-// Data the frontend is allowed to send to the backend
-export interface CreateUserPayload {
-  email: string;
-  name: string;
-  role: 'Vendas' | 'Supervisor';
+const createUserCallable = httpsCallable<CreateUserPayload, CreateUserResponse>(
+  functions,
+  'createUser',
+);
+
+export async function createUser(payload: CreateUserPayload): Promise<CreateUserResponse> {
+  const result = await createUserCallable(payload);
+  console.log(
+    'AUTH.SERVICES: \n\nThis is result.data returned to the store when registering a new user: ',
+    result.data,
+  );
+
+  return result.data;
 }
-
-export const registerUser = async (payload: CreateUserPayload) => {
-  const fn = httpsCallable(functions, 'createUser');
-  return fn(payload);
-};
 
 /**
  * Login user with email and password

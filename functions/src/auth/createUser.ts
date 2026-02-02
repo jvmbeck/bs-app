@@ -34,6 +34,8 @@ export const createUser = onCall(async (request) => {
     disabled: false,
   });
 
+  const resetLink = await auth.generatePasswordResetLink(email);
+
   // 3. Create Firestore profile
   await db.doc(`users/${userRecord.uid}`).set({
     name,
@@ -44,5 +46,5 @@ export const createUser = onCall(async (request) => {
     createdBy: callerUid,
   });
 
-  return { uid: userRecord.uid };
+  return { uid: userRecord.uid, email, resetLink };
 });

@@ -6,8 +6,9 @@
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
           </q-avatar>
-          Title
+          Dashboard
         </q-toolbar-title>
+        <UserAvatar />
       </q-toolbar>
     </q-header>
 
@@ -16,3 +17,7 @@
     </q-page-container>
   </q-layout>
 </template>
+
+<script setup lang="ts">
+import UserAvatar from 'src/components/UserAvatar.vue';
+</script>

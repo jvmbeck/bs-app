@@ -6,7 +6,7 @@
           <q-avatar>
             <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" />
           </q-avatar>
-          Dashboard
+          <q-btn class="q-ml-md" color="secondary" to="/dashboard">Dashboard</q-btn>
         </q-toolbar-title>
         <UserAvatar />
       </q-toolbar>

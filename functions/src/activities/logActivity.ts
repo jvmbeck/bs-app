@@ -48,9 +48,9 @@ export const logActivity = onCall(async (request) => {
       userId: user,
       date: dateKey,
       activitiesCompleted: FieldValue.increment(1),
-      ...(type === 'Ligação' && { callsMade: FieldValue.increment(1) }),
-      ...(type === 'E-mail' && { emailsSent: FieldValue.increment(1) }),
-      ...(type === 'Reunião' && { meetingsHeld: FieldValue.increment(1) }),
+      ...(type === 'Ligação' && { calls: FieldValue.increment(1) }),
+      ...(type === 'E-mail' && { emails: FieldValue.increment(1) }),
+      ...(type === 'Reunião' && { meetings: FieldValue.increment(1) }),
     },
     { merge: true },
   );

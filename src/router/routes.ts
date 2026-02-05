@@ -25,13 +25,13 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    path: '/userConfig',
+    path: '/userSettings',
     component: () => import('layouts/MainLayout.vue'),
     meta: { requiresAuth: true },
     children: [
       {
         path: '',
-        component: () => import('pages/userConfig/UserConfig.vue'),
+        component: () => import('pages/userSettings/UserSettings.vue'),
       },
     ],
   },

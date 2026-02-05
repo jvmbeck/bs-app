@@ -23,7 +23,7 @@
           </div>
           <q-separator />
           <q-list>
-            <q-item clickable v-close-popup to="/userConfig">
+            <q-item clickable v-close-popup to="/userSettings">
               <q-item-section avatar>
                 <q-icon name="settings" />
               </q-item-section>

@@ -1,4 +1,3 @@
-import { useUserStore } from '../../stores/user-store';
 <template>
   <div>THIS IS THE MAIN PAGE THAT SHOULD OPEN WHEN USER IS LOGGED</div>
   <div>Hello {{ userName }}</div>
@@ -6,6 +5,7 @@ import { useUserStore } from '../../stores/user-store';
   <q-btn @click="testRegisterUser" label="test register user"></q-btn>
   <UserCreatedDialog v-model="showSuccess" :created-user="userStore.createdUser" />
 </template>
+
 <script setup lang="ts">
 import { useUserStore } from 'src/stores/user-store';
 import { httpsCallable } from 'firebase/functions';

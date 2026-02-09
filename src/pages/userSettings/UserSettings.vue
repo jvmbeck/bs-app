@@ -38,7 +38,7 @@
       </q-tabs>
       <q-tab-panels v-model="activeView">
         <q-tab-panel name="one">
-          <UsersList />
+          <UsersTable :users="usersAdmin.users" :loading="usersAdmin.loading" />
         </q-tab-panel>
 
         <q-tab-panel name="two">
@@ -52,10 +52,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useUserStore } from 'src/stores/user-store';
-import UsersList from 'src/components/userSettings/UsersList.vue';
+import { onMounted } from 'vue';
+import { useUsersAdminStore } from 'src/stores/usersAdmin-store';
+import UsersTable from 'src/components/userSettings/UsersTable.vue';
 import TestComponent from 'src/components/userSettings/TestComponent.vue';
 
+const usersAdmin = useUsersAdminStore();
 const userStore = useUserStore();
+
+onMounted(() => {
+  void usersAdmin.loadUsers();
+});
 
 const activeView = ref('one');
 </script>
